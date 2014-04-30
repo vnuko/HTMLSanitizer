@@ -44,10 +44,10 @@ class HTMLSanitizer
 		foreach($nodes as $node)
 		{
 			$this->stripJSTags($node)
-				 ->stripEventAtributes($node)
-				 ->stripAttributeJSContent($node, 'href')
-				 ->stripAttributeJSContent($node, 'src')
-				 ->stripAttributeJSContent($node, 'style');
+				->stripEventAtributes($node)
+				->stripAttributeJSContent($node, 'href')
+				->stripAttributeJSContent($node, 'src')
+				->stripAttributeJSContent($node, 'style');
 		}
 
 		$this->clean_string = $this->saveHTMLExact($dom); //save HTML
@@ -57,7 +57,7 @@ class HTMLSanitizer
 
 	/**
 	 * Adds an ability to use the HTMLSanitizer object as a string in a string context.
-     * Returns string only when clean() function was used
+	 * Returns string only when clean() function was used
 	 * 
 	 * @return string - String stripped out of Javascript
 	 */
@@ -128,16 +128,16 @@ class HTMLSanitizer
 		return $this;
 	}
 
-    /**
-    * Return HTML while stripping the annoying auto-added <html>, <body>, and doctype.
-    * This is ok since we assuming that the user input is fragment of body tags
-	*
-	* @param  DOMDocument $dom
-    * @return string
-    * 
-    * This method was borrowed from SmartDOMDocument class
-    * @link http://svn.beerpla.net/repos/public/PHP/SmartDOMDocument/trunk/SmartDOMDocument.class.php
-    */
+	/**
+	 * Return HTML while stripping the annoying auto-added <html>, <body>, and doctype.
+	 * This is ok since we assuming that the user input is fragment of body tags
+	 *
+	 * @param  DOMDocument $dom
+	 * @return string
+	 * 
+	 * This method was borrowed from SmartDOMDocument class
+	 * @link http://svn.beerpla.net/repos/public/PHP/SmartDOMDocument/trunk/SmartDOMDocument.class.php
+	 */
     public function saveHTMLExact(DOMDocument $dom) 
     {
 		return preg_replace(array("/^\<\!DOCTYPE.*?<body>/si", "!</body></html>$!si"), "", $dom->saveHTML());

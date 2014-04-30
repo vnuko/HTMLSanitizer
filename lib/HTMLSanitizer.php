@@ -55,91 +55,92 @@ class HTMLSanitizer
         return $this->clean_string;
     }
 
-	/**
-	 * Adds an ability to use the HTMLSanitizer object as a string in a string context.
-	 * Returns string only when clean() function was used
-	 * 
-	 * @return string - String stripped out of Javascript
-	 */
-	public function __toString() 
-	{
-		return $this->clean_string;
-	}
+    /**
+     * Adds an ability to use the HTMLSanitizer object as a string in a string context.
+     * Returns string only when clean() function was used
+     * 
+     * @return string - String stripped out of Javascript
+     */
+    public function __toString() 
+    {
+        return $this->clean_string;
+    }
 
-	/**
-	 * Strips out <script></script> tags
-	 * 
-	 * @param  DOMElement $node
-	 * 
-	 * @return object HTMLSanitizer
-	 */
-	protected function stripJSTags(DOMElement $node)
-	{
-		if($node->tagName == 'script')
-		{
-			$node->parentNode->removeChild($node);
-		}
+    /**
+     * Strips out <script></script> tags
+     * 
+     * @param  DOMElement $node
+     * 
+     * @return object HTMLSanitizer
+     */
+    protected function stripJSTags(DOMElement $node)
+    {
+        if($node->tagName == 'script')
+        {
+            $node->parentNode->removeChild($node);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Strips out the HTML event attributes
-	 * The list of all event attributes is specified in 
-	 * $html_events array
-	 * 
-	 * @param  DOMElement $node
-	 * 
-	 * @return object HTMLSanitizer
-	 */
-	protected function stripEventAtributes(DOMElement $node)
-	{
-		foreach($this->html_events as $event)
-		{
-			if($node->hasAttribute($event))
-				$node->removeAttribute($event);
-		}
+    /**
+     * Strips out the HTML event attributes
+     * The list of all event attributes is specified in 
+     * $html_events array
+     * 
+     * @param  DOMElement $node
+     * 
+     * @return object HTMLSanitizer
+     */
+    protected function stripEventAtributes(DOMElement $node)
+    {
+        foreach($this->html_events as $event)
+        {
+            if($node->hasAttribute($event))
+                $node->removeAttribute($event);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Strips out the javascript content - 'javascript:*'
-	 * from specified HTML attribute.
-	 * 
-	 * @param  DOMElement $node
-	 * @param  string     $attr_name attribute name [href, scr, style etc.]
-	 * 
-	 * @return object HTMLSanitizer
-	 */
-	protected function stripAttributeJSContent(DOMElement $node, $attr_name)
-	{	
-		$attr_value = $node->getAttribute($attr_name);
-		if($attr_value)
-		{
-			$match = preg_match('/java\s*script:/', $attr_value);
-			if($match)
-			{
-				$node->removeAttribute($attr_name);
-				$node->setAttribute($attr_name, '');
-			}
-		}
+    /**
+     * Strips out the javascript content - 'javascript:*'
+     * from specified HTML attribute.
+     * 
+     * @param  DOMElement $node
+     * @param  string     $attr_name attribute name [href, scr, style etc.]
+     * 
+     * @return object HTMLSanitizer
+     */
+    protected function stripAttributeJSContent(DOMElement $node, $attr_name)
+    {	
+        $attr_value = $node->getAttribute($attr_name);
+        if($attr_value)
+        {
+            $match = preg_match('/java\s*script:/', $attr_value);
+            if($match)
+            {
+                $node->removeAttribute($attr_name);
+                $node->setAttribute($attr_name, '');
+            }
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Return HTML while stripping the annoying auto-added <html>, <body>, and doctype.
-	 * This is ok since we assuming that the user input is fragment of body tags
-	 *
-	 * @param  DOMDocument $dom
-	 * @return string
-	 * 
-	 * This method was borrowed from SmartDOMDocument class
-	 * @link http://svn.beerpla.net/repos/public/PHP/SmartDOMDocument/trunk/SmartDOMDocument.class.php
-	 */
-	public function saveHTMLExact(DOMDocument $dom) 
-	{
-		return preg_replace(array("/^\<\!DOCTYPE.*?<body>/si", "!</body></html>$!si"), "", $dom->saveHTML());
-	}
+    /**
+     * Return HTML while stripping the annoying auto-added <html>, <body>, and doctype.
+     * This is ok since we assuming that the user input is fragment of body tags
+     *
+     * @param  DOMDocument $dom
+     * @return string
+     * 
+     * This method was borrowed from SmartDOMDocument class
+     * @link http://svn.beerpla.net/repos/public/PHP/SmartDOMDocument/trunk/SmartDOMDocument.class.php
+     */
+    public function saveHTMLExact(DOMDocument $dom) 
+    {
+        return preg_replace(array("/^\<\!DOCTYPE.*?<body>/si", "!</body></html>$!si"), "", $dom->saveHTML());
+    }
 }
+

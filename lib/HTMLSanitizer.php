@@ -138,8 +138,8 @@ class HTMLSanitizer
 	 * This method was borrowed from SmartDOMDocument class
 	 * @link http://svn.beerpla.net/repos/public/PHP/SmartDOMDocument/trunk/SmartDOMDocument.class.php
 	 */
-    public function saveHTMLExact(DOMDocument $dom) 
-    {
+	public function saveHTMLExact(DOMDocument $dom) 
+	{
 		return preg_replace(array("/^\<\!DOCTYPE.*?<body>/si", "!</body></html>$!si"), "", $dom->saveHTML());
-    }
+	}
 }

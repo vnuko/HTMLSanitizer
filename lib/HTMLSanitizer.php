@@ -13,47 +13,47 @@
 */
 class HTMLSanitizer
 {
-	//global event attributes that can be added to HTML elements to define event actions
-	protected $html_events = array(
-		'onafterprint', 'onbeforeprint', 'onbeforeunload', 'onerror', 'onhaschange', 'onload', 'onmessage', 'onoffline', 'ononline', 'onpagehide', 'onpageshow',
-		'onpopstate', 'onredo', 'onresize', 'onstorage', 'onundo', 'onunload', 'onblur', 'onchange', 'oncontextmenu', 'onfocus', 'onformchange', 'onforminput',
-		'oninput', 'oninvalid', 'onreset', 'onselect', 'onsubmit', 'onkeydown', 'onkeypress', 'onkeyup', 'onclick', 'ondblclick', 'ondrag', 'ondragend', 'ondragenter',
-		'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onmousedown', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onscroll', 'onabort',
-		'oncanplay', 'oncanplaythrough', 'ondurationchange', 'onemptied', 'onended', 'onerror', 'onloadeddata', 'onloadedmetadata', 'onloadstart', 'onpause', 'onplay', 
-		'onplaying', 'onprogress', 'onratechange', 'onreadystatechange', 'onseeked', 'onseeking', 'onstalled', 'onsuspend', 'ontimeupdate', 'onvolumechange', 'onwaiting'
-	);
+    //global event attributes that can be added to HTML elements to define event actions
+    protected $html_events = array(
+        'onafterprint', 'onbeforeprint', 'onbeforeunload', 'onerror', 'onhaschange', 'onload', 'onmessage', 'onoffline', 'ononline', 'onpagehide', 'onpageshow',
+        'onpopstate', 'onredo', 'onresize', 'onstorage', 'onundo', 'onunload', 'onblur', 'onchange', 'oncontextmenu', 'onfocus', 'onformchange', 'onforminput',
+        'oninput', 'oninvalid', 'onreset', 'onselect', 'onsubmit', 'onkeydown', 'onkeypress', 'onkeyup', 'onclick', 'ondblclick', 'ondrag', 'ondragend', 'ondragenter',
+        'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onmousedown', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onscroll', 'onabort',
+        'oncanplay', 'oncanplaythrough', 'ondurationchange', 'onemptied', 'onended', 'onerror', 'onloadeddata', 'onloadedmetadata', 'onloadstart', 'onpause', 'onplay', 
+        'onplaying', 'onprogress', 'onratechange', 'onreadystatechange', 'onseeked', 'onseeking', 'onstalled', 'onsuspend', 'ontimeupdate', 'onvolumechange', 'onwaiting'
+    );
 
-	protected $clean_string;
+    protected $clean_string;
 
-	/**
-	 * Strips out Javascript from HTML input
-	 * 
-	 * @param  string $dirty_string
-	 * 
-	 * @return string
-	 */
-	public function clean($dirty_string)
-	{
-		if(empty($dirty_string)) 
-			return false;
+    /**
+     * Strips out Javascript from HTML input
+     * 
+     * @param  string $dirty_string
+     * 
+     * @return string
+     */
+    public function clean($dirty_string)
+    {
+        if(empty($dirty_string)) 
+            return false;
 
-		$dom = new DOMDocument();
-		$dom->loadHTML($dirty_string);
+        $dom = new DOMDocument();
+        $dom->loadHTML($dirty_string);
 
-		$nodes = $dom->getElementsByTagName('*');
-		foreach($nodes as $node)
-		{
-			$this->stripJSTags($node)
-				->stripEventAtributes($node)
-				->stripAttributeJSContent($node, 'href')
-				->stripAttributeJSContent($node, 'src')
-				->stripAttributeJSContent($node, 'style');
-		}
+        $nodes = $dom->getElementsByTagName('*');
+        foreach($nodes as $node)
+        {
+            $this->stripJSTags($node)
+                ->stripEventAtributes($node)
+                ->stripAttributeJSContent($node, 'href')
+                ->stripAttributeJSContent($node, 'src')
+                ->stripAttributeJSContent($node, 'style');
+        }
 
-		$this->clean_string = $this->saveHTMLExact($dom); //save HTML
+        $this->clean_string = $this->saveHTMLExact($dom); //save HTML
 
-		return $this->clean_string;
-	}
+        return $this->clean_string;
+    }
 
 	/**
 	 * Adds an ability to use the HTMLSanitizer object as a string in a string context.

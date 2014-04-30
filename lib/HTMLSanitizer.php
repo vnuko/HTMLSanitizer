@@ -64,7 +64,7 @@ class HTMLSanitizer
 	public function __toString() 
 	{
 		return $this->clean_string;
-    }
+	}
 
 	/**
 	 * Strips out <script></script> tags

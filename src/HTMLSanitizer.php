@@ -117,7 +117,7 @@ class HTMLSanitizer
         $attr_value = $node->getAttribute($attr_name);
         if($attr_value)
         {
-            $match = preg_match('/java\s*script:/', $attr_value);
+            $match = preg_match('/java\s*script:/i', $attr_value);
             if($match)
             {
                 $node->removeAttribute($attr_name);

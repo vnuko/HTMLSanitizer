@@ -4,7 +4,7 @@ HTMLSanitizer is black-list based HTML sanitizer which strips out the javascript
 
 ##Usage
 	// include HTMLSanitizer class
-  include("../src/HTMLSanitizer.php");
-	
+	include("../src/HTMLSanitizer.php");
+  
 	$sanitizer = new HTMLSanitizer();
-  $clean_html = $sanitizer->clean($dirty_html);
+	$clean_html = $sanitizer->clean($dirty_html);

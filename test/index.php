@@ -27,7 +27,7 @@ echo "<br>";
 //== TEST 2 ==
 $html = <<<HTML
 <h1>Test 2</h1>
-<a href="Java script:alert('hooo')" style="javascript:alert('booo')"><img src="javascript:alert('mooo')" alt="picture"/></a>
+<a href="javascript:alert('hooo')" style="javascript:alert('booo')"><img src="javascript:alert('mooo')" alt="picture"/></a>
 HTML;
 
 $clean_html = $sanitizer->clean($html);

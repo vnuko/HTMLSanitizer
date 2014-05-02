@@ -10,6 +10,9 @@
 *
 * @author Milos Vnucko
 * @version 0.1.1
+*
+* Read more:
+* @link https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
 */
 class HTMLSanitizer
 {

@@ -13,6 +13,8 @@
 */
 class HTMLSanitizer
 {
+    protected $clean_string;
+
     //global event attributes that can be added to HTML elements to define event actions
     protected $html_events = array(
         'onafterprint', 'onbeforeprint', 'onbeforeunload', 'onerror', 'onhaschange', 'onload', 'onmessage', 'onoffline', 'ononline', 'onpagehide', 'onpageshow',
@@ -22,10 +24,8 @@ class HTMLSanitizer
         'oncanplay', 'oncanplaythrough', 'ondurationchange', 'onemptied', 'onended', 'onerror', 'onloadeddata', 'onloadedmetadata', 'onloadstart', 'onpause', 'onplay', 
         'onplaying', 'onprogress', 'onratechange', 'onreadystatechange', 'onseeked', 'onseeking', 'onstalled', 'onsuspend', 'ontimeupdate', 'onvolumechange', 'onwaiting'
     );
-
+    
     const DEFAULT_VALUE = '';
-
-    protected $clean_string;
 
     /**
      * Strips out Javascript from HTML input
@@ -57,10 +57,10 @@ class HTMLSanitizer
             //href="javascript:*"
             $this->stripAttributeJSContent($node, 'href');
             
-            //href="javascript:*"
+            //src="javascript:*"
             $this->stripAttributeJSContent($node, 'src');
             
-            //href="javascript:*"
+            //style="javascript:*"
             $this->stripAttributeJSContent($node, 'style');
 
             //<meta content="{content}"

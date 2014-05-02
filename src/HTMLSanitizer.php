@@ -23,6 +23,8 @@ class HTMLSanitizer
         'onplaying', 'onprogress', 'onratechange', 'onreadystatechange', 'onseeked', 'onseeking', 'onstalled', 'onsuspend', 'ontimeupdate', 'onvolumechange', 'onwaiting'
     );
 
+    const DEFAULT_VALUE = '';
+
     protected $clean_string;
 
     /**
@@ -34,7 +36,7 @@ class HTMLSanitizer
      */
     public function clean($dirty_string)
     {
-        if(empty($dirty_string)) 
+        if(empty($dirty_string))
             return false;
 
         $dom = new DOMDocument();
@@ -43,13 +45,33 @@ class HTMLSanitizer
         $nodes = $dom->getElementsByTagName('*');
         foreach($nodes as $node)
         {
-            $this->stripJSTags($node)
-                ->stripEventAtributes($node)
-                ->stripAttributeJSContent($node, 'href')
-                ->stripAttributeJSContent($node, 'src')
-                ->stripAttributeJSContent($node, 'style');
-        }
+            //<script></script>
+            $this->stripTagContent($node, 'script');
+            
+            //<iframe></iframe>
+            $this->stripTagContent($node, 'iframe');
 
+            //inline HTML events
+            $this->stripEventAtributes($node);
+
+            //href="javascript:*"
+            $this->stripAttributeJSContent($node, 'href');
+            
+            //href="javascript:*"
+            $this->stripAttributeJSContent($node, 'src');
+            
+            //href="javascript:*"
+            $this->stripAttributeJSContent($node, 'style');
+
+            //<meta content="{content}"
+            $this->stripTagAttributeContent($node, 'meta', 'content');
+
+            //<object data="{content}"
+            $this->stripTagAttributeContent($node, 'object', 'data');
+            
+            //<embed src="{content}"
+            $this->stripTagAttributeContent($node, 'embed', 'src');
+        }
         $this->clean_string = $this->saveHTMLExact($dom); //save HTML
 
         return $this->clean_string;
@@ -67,15 +89,16 @@ class HTMLSanitizer
     }
 
     /**
-     * Strips out <script></script> tags
+     * Strip out HTML tag and its content
      * 
-     * @param  DOMElement $node
+     * @param  DOMElement $node     
+     * @param  string     $tag_name
      * 
      * @return object HTMLSanitizer
      */
-    protected function stripJSTags(DOMElement $node)
+    protected function stripTagContent(DOMElement $node, $tag_name)
     {
-        if($node->tagName == 'script')
+        if($node->tagName == $tag_name)
         {
             $node->parentNode->removeChild($node);
         }
@@ -104,6 +127,26 @@ class HTMLSanitizer
     }
 
     /**
+     * Strips out the attribute content for specified tag.
+     * 
+     * @param  DOMElement $node
+     * @param  string     $tag_name
+     * @param  string     $attr_name [description]
+     * 
+     * @return object HTMLSanitizer
+     */
+    protected function stripTagAttributeContent(DOMElement $node, $tag_name, $attr_name)
+    {
+        if($node->tagName == $tag_name && $node->getAttribute($attr_name))
+        {
+            $node->removeAttribute($attr_name);
+            $node->setAttribute($attr_name, self::DEFAULT_VALUE);
+        }
+
+        return $this;
+    }
+
+    /**
      * Strips out the javascript content - 'javascript:*'
      * from specified HTML attribute.
      * 
@@ -121,7 +164,7 @@ class HTMLSanitizer
             if($match)
             {
                 $node->removeAttribute($attr_name);
-                $node->setAttribute($attr_name, '');
+                $node->setAttribute($attr_name, self::DEFAULT_VALUE);
             }
         }
 

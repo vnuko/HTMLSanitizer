@@ -35,7 +35,7 @@ class HTMLSanitizer
      * 
      * @param  string $dirty_string
      * 
-     * @return string
+     * @return string 
      */
     public function clean($dirty_string)
     {
@@ -48,33 +48,34 @@ class HTMLSanitizer
         $nodes = $dom->getElementsByTagName('*');
         foreach($nodes as $node)
         {
-            //<script></script>
-            $this->stripTagContent($node, 'script');
+            //strip <script></script>
+            $this->stripTag($node, 'script');
             
-            //<iframe></iframe>
-            $this->stripTagContent($node, 'iframe');
+            //strip <iframe></iframe>
+            $this->stripTag($node, 'iframe');
 
-            //inline HTML events
+            //strip HTML inline events attributes
             $this->stripEventAtributes($node);
 
-            //href="javascript:*"
+            //strip href="javascript:*" content
             $this->stripAttributeJSContent($node, 'href');
             
-            //src="javascript:*"
+            //strip src="javascript:*" content
             $this->stripAttributeJSContent($node, 'src');
             
-            //style="javascript:*"
+            //strip style="javascript:*" content
             $this->stripAttributeJSContent($node, 'style');
 
-            //<meta content="{content}"
+            //strip <meta content="{content}"
             $this->stripTagAttributeContent($node, 'meta', 'content');
 
-            //<object data="{content}"
+            //strip <object data="{content}"
             $this->stripTagAttributeContent($node, 'object', 'data');
             
-            //<embed src="{content}"
+            //strip <embed src="{content}"
             $this->stripTagAttributeContent($node, 'embed', 'src');
         }
+
         $this->clean_string = $this->saveHTMLExact($dom); //save HTML
 
         return $this->clean_string;
@@ -99,31 +100,11 @@ class HTMLSanitizer
      * 
      * @return object HTMLSanitizer
      */
-    protected function stripTagContent(DOMElement $node, $tag_name)
+    protected function stripTag(DOMElement $node, $tag_name)
     {
         if($node->tagName == $tag_name)
         {
             $node->parentNode->removeChild($node);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Strips out the HTML event attributes
-     * The list of all event attributes is specified in 
-     * $html_events array
-     * 
-     * @param  DOMElement $node
-     * 
-     * @return object HTMLSanitizer
-     */
-    protected function stripEventAtributes(DOMElement $node)
-    {
-        foreach($this->html_events as $event)
-        {
-            if($node->hasAttribute($event))
-                $node->removeAttribute($event);
         }
 
         return $this;
@@ -159,7 +140,7 @@ class HTMLSanitizer
      * @return object HTMLSanitizer
      */
     protected function stripAttributeJSContent(DOMElement $node, $attr_name)
-    {	
+    {   
         $attr_value = $node->getAttribute($attr_name);
         if($attr_value)
         {
@@ -169,6 +150,26 @@ class HTMLSanitizer
                 $node->removeAttribute($attr_name);
                 $node->setAttribute($attr_name, self::DEFAULT_VALUE);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Strips out the HTML event attributes
+     * The list of all event attributes is specified in 
+     * $html_events array
+     * 
+     * @param  DOMElement $node
+     * 
+     * @return object HTMLSanitizer
+     */
+    protected function stripEventAtributes(DOMElement $node)
+    {
+        foreach($this->html_events as $event)
+        {
+            if($node->hasAttribute($event))
+                $node->removeAttribute($event);
         }
 
         return $this;

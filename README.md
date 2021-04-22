@@ -1,8 +1,10 @@
-#HTMLSanitizer
-##About
+# HTMLSanitizer
+
+## About
+
 HTMLSanitizer is black-list based HTML sanitizer which strips out the javascript code.
 
-##Usage
+## Usage
 	// include HTMLSanitizer class
 	include("../src/HTMLSanitizer.php");
   
